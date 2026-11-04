@@ -1,0 +1,1099 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* Admin dashboard */
+.admin-modal{position:fixed;inset:0;z-index:120;background:rgba(4,10,20,.82);display:grid;place-items:center;padding:16px}
+.admin-panel{width:min(900px,100%);max-height:92vh;overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:clamp(18px,3vw,30px);box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.admin-head p{color:var(--muted);font-size:.9rem}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.admin-field{display:grid;gap:5px}.admin-field.full{grid-column:1/-1}
+.admin-field label{font-size:.85rem;font-weight:600}
+.admin-field input,.admin-field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);font:inherit}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.admin-list{display:grid;gap:10px;margin-top:22px}
+.admin-item{border:1px solid var(--line);border-radius:5px;padding:12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.admin-item p{font-size:.86rem;color:var(--muted)}
+.admin-msg{padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:4px;margin:12px 0;font-size:.9rem}
+.admin-close{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:4px;padding:7px 10px}
+@media(max-width:600px){.admin-grid{grid-template-columns:1fr}.admin-item{align-items:flex-start;flex-direction:column}}
+
+</style></head><body>
+<title>Super Global Business Associates | Railway Siding, CHP &amp; AHP O&amp;M Services</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="O&M services for railway sidings, CHP & AHP in thermal power and cement plants: locomotives, tracks, signalling, manpower supply and civil works. Based in Varanasi since 2012.">
+<meta property="og:title" content="Super Global Business Associates">
+<meta property="og:description" content="O&M services for railway sidings, CHP & AHP, locomotives, tracks and signalling.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: a kilometre-post corridor. Navy bands carry the weight, steel-grey sections breathe, railway yellow marks only what matters.
+   Every section opens with a chainage-style label (a real railway convention). */
+:root{
+  --bg:#F2F5F8; --surface:#FFFFFF; --ink:#0D1B2E; --muted:#4A596C; --line:#D2DAE3;
+  --band:#0B1F3A; --band2:#12305A; --band-ink:#EAF0F7; --band-mute:#A9BBD1; --band-line:#27456E;
+  --accent:#F2A900; --accent-ink:#0B1F3A; --link:#12305A; --ph-bg:#FFF4CC; --ph-ink:#6B4A00; --ok:#1E7B4B; --err:#B3261E;
+  --f-disp:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
+  --f-body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --r:4px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#09131F; --surface:#0F1E31; --ink:#E7EDF4; --muted:#9DAEC2; --line:#203550;
+  --band:#06101C; --band2:#0E2442; --band-line:#1E3A5E;
+  --accent:#F2B21F; --link:#8DB4E8; --ph-bg:#3A2D08; --ph-ink:#F5D88A; --ok:#5BCB8D; --err:#FF8A80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#09131F; --surface:#0F1E31; --ink:#E7EDF4; --muted:#9DAEC2; --line:#203550;
+  --band:#06101C; --band2:#0E2442; --band-line:#1E3A5E;
+  --accent:#F2B21F; --link:#8DB4E8; --ph-bg:#3A2D08; --ph-ink:#F5D88A; --ok:#5BCB8D; --err:#FF8A80; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--band)}
+h1,h2,h3,h4{font-family:var(--f-disp);font-weight:700;line-height:1.05;margin:0;text-wrap:balance;letter-spacing:.005em}
+h2{font-size:clamp(1.8rem,4vw,2.6rem);text-transform:uppercase}
+h3{font-size:1.5rem;text-transform:uppercase}
+p{margin:0}
+a{color:var(--link)}
+img{display:block;max-width:100%}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.w{max-width:1200px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band{background:var(--band);color:var(--band-ink)}
+.sec{padding-block:clamp(40px,6vw,72px)}
+.ph{background:var(--ph-bg);color:var(--ph-ink);padding:0 .3em;border-radius:2px;border-bottom:1px dashed var(--accent);font-style:normal}
+.band .ph{background:rgba(242,169,0,.16);color:#FFD98A}
+.chain{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.8rem;margin-bottom:14px}
+.chain::before{content:"";width:34px;height:12px;background:repeating-linear-gradient(90deg,var(--accent) 0 6px,transparent 6px 10px)}
+.band .chain{color:var(--band-mute)}
+.lede{color:var(--muted);max-width:62ch;font-size:1.08rem}
+.band .lede{color:var(--band-mute)}
+.head{display:grid;gap:10px;margin-bottom:28px;max-width:760px}
+.btn{display:inline-flex;align-items:center;gap:.6rem;border:2px solid transparent;border-radius:var(--r);padding:.8rem 1.35rem;font-family:var(--f-disp);font-weight:600;font-size:1.1rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:transform .2s,background .2s,color .2s,border-color .2s}
+.btn svg{width:18px;height:18px}
+.btn-y{background:var(--accent);color:var(--accent-ink)}
+.btn-y:hover{transform:translateY(-2px);background:#FFBE2E}
+.btn-o{border-color:currentColor;color:var(--band-ink);background:transparent}
+.btn-o:hover{background:rgba(255,255,255,.1)}
+.btn-n{background:var(--band);color:#fff}
+.btn-n:hover{background:var(--band2)}
+.rv{transition:transform .6s ease}
+.js .rv:not(.in){transform:translateY(14px)}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--band);color:var(--band-ink);border-bottom:1px solid var(--band-line)}
+.bar{display:flex;align-items:center;gap:24px;min-height:58px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;min-width:0}
+.logo .mk{flex:none;width:38px;height:auto;object-fit:contain}
+.logo b{font-family:var(--f-body);font-weight:600;font-size:.9rem;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.logo b.ph,.logo .ph{background:none;border:0;padding:0;color:inherit}
+nav.main{margin-left:auto;display:flex;align-items:center;gap:4px}
+nav.main a{color:var(--band-mute);text-decoration:none;font-weight:500;font-size:.86rem;white-space:nowrap;padding:.45rem .6rem;position:relative;transition:color .2s}
+nav.main a:hover,nav.main a.on{color:#fff}
+nav.main a.on::after{content:"";position:absolute;left:.6rem;right:.6rem;bottom:0;height:2px;background:var(--accent)}
+.bar .gt{white-space:nowrap;font-family:var(--f-body);font-weight:600;font-size:.82rem;letter-spacing:.04em;text-transform:none;padding:.45rem .95rem;margin-left:6px;border-width:1px;border-color:var(--accent);background:transparent;color:var(--accent)}
+.bar .gt:hover{background:var(--accent);color:var(--accent-ink);transform:none}
+.hb{display:none;margin-left:auto;background:none;border:2px solid var(--band-line);color:#fff;border-radius:var(--r);width:44px;height:44px;align-items:center;justify-content:center}
+.hb svg{width:22px;height:22px}
+.mm{border-top:1px solid var(--band-line);padding-block:10px 18px}
+.mm a{display:block;color:var(--band-ink);text-decoration:none;padding:.8rem 0;border-bottom:1px solid var(--band-line);font-weight:500}
+.mm .btn{margin-top:14px;display:flex;justify-content:center}
+@media (max-width:1120px){nav.main{display:none}.hb{display:inline-flex}.bar .gt{display:none}}
+@media (min-width:1121px){.mm{display:none!important}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:#07142A;color:#fff;isolation:isolate}
+.hero svg.bg{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(7,20,42,.92) 0%,rgba(7,20,42,.7) 48%,rgba(7,20,42,.25) 100%)}
+.hero .in{padding-block:clamp(64px,11vw,140px) 0;display:grid;gap:28px}
+.hero .co{display:flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:#FFD98A}
+.hero h1{font-size:clamp(1.9rem,4.4vw,3.3rem);text-transform:uppercase;max-width:22ch;line-height:1.08}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.sub{max-width:56ch;font-size:clamp(1rem,1.6vw,1.12rem);color:#D3DDEA}
+.hero .cta{display:flex;flex-wrap:wrap;gap:14px}
+.hero .strip{margin-top:clamp(40px,6vw,72px);border-top:1px solid rgba(255,255,255,.22);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 28px;padding-block:18px;font-family:var(--f-mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#B9C8DB}
+.hero .strip a{color:#fff;text-decoration:none;display:inline-flex;gap:.5rem;align-items:center}
+.hero .strip a svg{width:16px;height:16px;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(4px)}}
+.en{animation:en .9s cubic-bezier(.2,.7,.2,1) both}
+.en:nth-child(2){animation-delay:.1s}.en:nth-child(3){animation-delay:.2s}.en:nth-child(4){animation-delay:.3s}
+@keyframes en{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.demo-note{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;color:#8FA3BC}
+
+/* about */
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,64px);align-items:start}
+.about>*{min-width:0}
+.about .txt{display:grid;gap:20px}
+.draft{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);border:1px dashed var(--line);padding:.5rem .75rem;border-radius:var(--r)}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.fig img{width:100%;aspect-ratio:8/5;object-fit:cover}
+.fig figcaption{padding:12px 16px;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);letter-spacing:.05em}
+.gauge{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 14px 8px}
+.gauge svg{width:100%;height:auto}
+.gauge text{fill:var(--ink);font-family:var(--f-mono);font-size:12px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:40px}
+.facts div{background:var(--surface);padding:16px 18px}
+.facts dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:4px 0 0;font-weight:600}
+.mv{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:40px}
+.mv>div{background:var(--band);color:var(--band-ink);padding:26px;border-radius:var(--r)}
+.mv h3{color:var(--accent);margin-bottom:8px}
+.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:40px}
+.topics>div{background:var(--surface);padding:16px 18px}
+.topics h4{font-size:1.15rem;text-transform:uppercase;margin-bottom:6px}
+.topics p{font-size:.95rem;color:var(--muted)}
+.vals{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px}
+.vals span{font-family:var(--f-disp);font-weight:600;font-size:1.15rem;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--band);padding:.35rem 1rem;border-radius:var(--r)}
+:root[data-theme="dark"] .vals span{border-color:var(--band-line)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .vals span{border-color:var(--band-line)}}
+@media (max-width:860px){.about{grid-template-columns:1fr}}
+
+/* services */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tab{background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:.4rem .8rem;border-radius:var(--r);font-weight:500;font-size:.88rem}
+.tab[aria-pressed="true"]{background:var(--band);color:#fff;border-color:var(--band)}
+.tab small{font-family:var(--f-mono);opacity:.7;margin-left:.4rem}
+.tabnote{font-size:.85rem;color:var(--muted);margin-bottom:16px;min-height:1.4em}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(5,15,30,.45)}
+.card .im{position:relative}
+.card .im img{width:100%;aspect-ratio:8/5;object-fit:cover}
+.card .im .ic{position:absolute;left:14px;bottom:-20px;width:44px;height:44px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;border-radius:var(--r)}
+.card .im .ic svg{width:22px;height:22px}
+.card .bd{padding:32px 20px 20px;display:grid;gap:10px}
+.card h3{font-size:1.4rem}
+.card p.s{color:var(--muted);font-size:.96rem}
+.pill{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .55rem;border-radius:2px;border:1px solid var(--line);color:var(--muted);width:fit-content}
+.pill.offered{border-color:var(--ok);color:var(--ok)}
+.pill.capability{border-color:var(--link);color:var(--link)}
+.pill.expansion{border-style:dashed}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.more{margin-top:4px;background:none;border:0;border-top:1px solid var(--line);padding:.8rem 0 0;display:flex;justify-content:space-between;align-items:center;color:var(--link);font-weight:600;width:100%;text-align:left}
+.more svg{width:18px;height:18px;transition:transform .25s}
+.more[aria-expanded="true"] svg{transform:rotate(90deg)}
+.acts{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:.93rem}
+.acts li{padding-left:18px;position:relative}
+.acts li::before{content:"";position:absolute;left:0;top:.62em;width:9px;height:3px;background:var(--accent)}
+
+
+/* services: quiet cards */
+.sv{border-radius:2px;box-shadow:none}
+.sv:hover{transform:none;box-shadow:none;border-color:var(--muted)}
+.sv .sph{width:100%;aspect-ratio:16/10;object-fit:cover}
+.sv .bd{padding:14px 16px 12px;gap:6px}
+.smeta{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.smeta svg{width:20px;height:20px;color:var(--muted);flex:none}
+.st{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:.55rem}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.st.offered::before{background:var(--ok)}
+.st.capability::before{background:var(--link)}
+.st.expansion::before{background:transparent;border:1px solid var(--muted)}
+.st em{font-style:normal;color:var(--muted);opacity:.75}
+.st em::before{content:"\00B7";margin-right:.55rem}
+.sv h3{font-size:1.12rem}
+.sv p.s{font-size:.88rem;line-height:1.45}
+.sv .more{padding-top:.55rem;margin-top:2px;font-size:.88rem}
+.sv .acts{font-size:.86rem;gap:4px}
+
+/* capabilities */
+.cap{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));border-top:1px solid var(--band-line);border-left:1px solid var(--band-line)}
+.cap>div{background:var(--band);padding:16px 18px;display:grid;gap:10px;align-content:start}
+.cap svg{width:26px;height:26px;color:var(--accent)}
+.cap h4{font-size:1.2rem;text-transform:uppercase}
+.ops{margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px 36px}
+.ops h3{grid-column:1/-1;color:var(--accent)}
+.ops div{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--band-line)}
+.ops svg{width:20px;height:20px;color:var(--accent);flex:none}
+.ctaline{margin-top:56px;background:var(--accent);color:var(--accent-ink);padding:clamp(22px,4vw,36px);display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center;border-radius:var(--r)}
+.ctaline h3{font-size:clamp(1.5rem,3.4vw,2.2rem)}
+.ctaline .btn-n{background:var(--accent-ink)}
+.fine{margin-top:18px;font-size:.85rem;color:var(--band-mute);max-width:80ch}
+
+/* gallery */
+.gal{overflow:hidden;position:relative;padding-block:6px}
+.gtrack{display:flex;width:max-content;will-change:transform}
+.gi{margin-right:16px;width:clamp(240px,30vw,380px);flex:none;position:relative;border:0;padding:0;background:var(--band);border-radius:var(--r);overflow:hidden;display:block;text-align:left}
+.gi img{width:100%;aspect-ratio:4/3;object-fit:cover;transition:transform .5s}
+.gi:hover img{transform:scale(1.05)}
+.gi span{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 12px;color:#fff;font-weight:500;font-size:.92rem;background:linear-gradient(transparent,rgba(5,14,28,.85))}
+.gctl{display:flex;gap:10px;margin-top:22px;align-items:center}
+.gctl button{width:46px;height:46px;border-radius:var(--r);border:2px solid var(--band-line);background:transparent;color:#fff;display:grid;place-items:center}
+.gctl button:hover{border-color:var(--accent);color:var(--accent)}
+.gctl svg{width:22px;height:22px}
+.gctl small{font-family:var(--f-mono);color:var(--band-mute);font-size:.74rem;letter-spacing:.08em;margin-left:8px}
+.lb{position:fixed;inset:0;z-index:100;background:rgba(4,10,20,.94);display:grid;grid-template-rows:1fr auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));gap:12px}
+.lb img{max-width:100%;max-height:100%;margin:auto;object-fit:contain;min-height:0;align-self:center}
+.lb .cp{color:#fff;text-align:center;font-size:.95rem;display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap}
+.lb button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:var(--r);width:46px;height:46px;display:grid;place-items:center}
+.lb button svg{width:22px;height:22px}
+.lb .x{position:absolute;top:max(16px,env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px))}
+
+/* clients */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:16px}
+.cl{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);height:130px;display:grid;place-items:center;padding:16px;text-align:center;transition:border-color .2s,transform .2s}
+.cl:hover{border-color:var(--accent);transform:translateY(-2px)}
+.cl.lg{background:#fff;border-color:#fff}
+.cl img{max-height:72px;max-width:100%;width:auto;object-fit:contain}
+.cl .slot{display:grid;gap:6px;justify-items:center;color:var(--muted);font-size:.78rem;font-family:var(--f-mono);letter-spacing:.06em}
+.cl .slot i{width:70px;height:34px;border:1px dashed var(--line);border-radius:2px;display:block}
+.cl b{font-family:var(--f-disp);font-size:1.15rem;letter-spacing:.05em}
+
+/* projects */
+.pcard{cursor:pointer;text-align:left;padding:0;font:inherit;color:inherit}
+.pcard .bd{padding:18px 20px 20px}
+.pmeta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.modal{position:fixed;inset:0;z-index:90;background:rgba(4,10,20,.72);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal .box{background:var(--surface);color:var(--ink);border-radius:var(--r);max-width:720px;width:100%;max-height:100%;overflow:auto;position:relative}
+.modal .box img{width:100%;aspect-ratio:8/5;object-fit:cover}
+.modal .in2{padding:24px;display:grid;gap:14px}
+.modal dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0;font-size:.95rem}
+.modal dt{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:.2rem}
+.modal dd{margin:0}
+.modal .xx{position:absolute;top:10px;right:10px;background:var(--band);color:#fff;border:0;border-radius:var(--r);width:40px;height:40px;display:grid;place-items:center}
+.modal .xx svg{width:20px;height:20px}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
+.why>div{display:grid;grid-template-columns:22px 1fr;column-gap:10px;row-gap:2px;align-content:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:2px}
+.why svg{grid-row:1/3;width:22px;height:22px;color:var(--link);margin-top:2px}
+.why h4{font-size:1rem;text-transform:uppercase;letter-spacing:.03em}
+.why p{font-size:.82rem;line-height:1.4;color:var(--muted)}
+/* safety */
+.sf{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:start}
+.sf>*{min-width:0}
+.sl{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.sl li{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--band-line)}
+.sl svg{width:24px;height:24px;color:var(--accent)}
+.sl b{font-family:var(--f-disp);font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;display:block}
+.sl span{color:var(--band-mute);font-size:.93rem}
+.sf .fig{background:var(--band2);border-color:var(--band-line)}
+.sf .fig figcaption{color:var(--band-mute)}
+.certs{margin-top:22px;border:1px dashed var(--band-line);padding:14px 16px;font-size:.9rem;color:var(--band-mute);border-radius:var(--r)}
+@media (max-width:860px){.sf{grid-template-columns:1fr}}
+
+/* leadership */
+.lead{display:grid;grid-template-columns:340px 1fr;gap:clamp(28px,5vw,64px);align-items:start}
+.lead>*{min-width:0}
+.pt{aspect-ratio:4/5;background:var(--band);color:var(--band-ink);border-radius:var(--r);display:grid;place-items:center;position:relative;overflow:hidden;max-width:100%}
+.pt::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 18px,rgba(255,255,255,.04) 18px 36px)}
+.pt b{font-family:var(--f-disp);font-size:7rem;color:var(--accent);position:relative}
+.pt small{position:absolute;bottom:14px;left:14px;right:14px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--band-mute)}
+.lead .who{margin-bottom:6px}
+.lead .role{font-family:var(--f-mono);letter-spacing:.14em;text-transform:uppercase;font-size:.82rem;color:var(--muted);margin-bottom:22px}
+.lead .msg{display:grid;gap:16px;max-width:64ch}
+blockquote{margin:28px 0 0;padding:6px 0 6px 22px;border-left:6px solid var(--accent);font-family:var(--f-disp);font-weight:600;font-size:clamp(1.6rem,3.6vw,2.5rem);line-height:1.12;text-transform:uppercase;max-width:22ch}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:30px}
+.pillars div{background:var(--surface);padding:14px 16px;font-size:.92rem}
+.pillars b{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+@media (max-width:860px){.lead{grid-template-columns:1fr}.pt{max-width:320px}}
+
+/* highlights */
+.hl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));border-top:1px solid var(--band-line);border-left:1px solid var(--band-line)}
+.hl>div{background:var(--band);padding:26px 22px;display:grid;gap:6px}
+.hl .n{font-family:var(--f-disp);font-weight:700;font-size:clamp(2.2rem,5vw,3.2rem);color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+.hl .t{text-transform:uppercase;font-family:var(--f-mono);font-size:.74rem;letter-spacing:.12em;color:var(--band-mute)}
+
+/* contact */
+.ct{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,5vw,60px);align-items:start}
+.ct>*{min-width:0}
+.cinfo{display:grid;gap:18px}
+.cinfo .row{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start}
+.cinfo svg{width:22px;height:22px;color:var(--accent);margin-top:3px}
+.cinfo small{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--band-mute)}
+.cinfo .v{font-size:1.05rem;overflow-wrap:anywhere}
+.cinfo a{color:#fff}
+.cp2{background:none;border:1px solid var(--band-line);color:var(--band-mute);font-size:.72rem;font-family:var(--f-mono);border-radius:2px;padding:.1rem .45rem;margin-left:.5rem}
+.map{aspect-ratio:16/10;border:1px dashed var(--band-line);border-radius:var(--r);display:grid;place-items:center;text-align:center;padding:16px;color:var(--band-mute);font-size:.9rem;background:repeating-linear-gradient(0deg,transparent 0 31px,rgba(255,255,255,.04) 31px 32px),repeating-linear-gradient(90deg,transparent 0 31px,rgba(255,255,255,.04) 31px 32px)}
+.map svg{width:30px;height:30px;color:var(--accent);margin:0 auto 6px}
+form.enq{background:var(--surface);color:var(--ink);border-radius:var(--r);padding:clamp(20px,3vw,32px);display:grid;grid-template-columns:1fr 1fr;gap:16px}
+form.enq h3{grid-column:1/-1}
+.fld{display:grid;gap:6px;min-width:0}
+.fld.full{grid-column:1/-1}
+.fld label{font-weight:600;font-size:.9rem}
+.fld input,.fld select,.fld textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:.7rem .8rem}
+.fld textarea{min-height:130px;resize:vertical}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--link);outline:2px solid var(--accent);outline-offset:1px}
+.fld .er{color:var(--err);font-size:.82rem;min-height:1.1em}
+.fld.bad input,.fld.bad select,.fld.bad textarea{border-color:var(--err)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.stat{grid-column:1/-1;border-radius:var(--r);padding:14px 16px;font-size:.95rem;display:grid;gap:10px}
+.stat.err{border:1px solid var(--err);color:var(--err)}
+.stat.info{border:1px solid var(--accent);background:var(--ph-bg);color:var(--ink)}
+.stat.ok{border:1px solid var(--ok);color:var(--ok)}
+.stat pre{white-space:pre-wrap;font-family:var(--f-mono);font-size:.8rem;margin:0;color:var(--ink);background:var(--surface);padding:10px;border-radius:2px;max-height:200px;overflow:auto}
+@media (max-width:900px){.ct{grid-template-columns:1fr}}
+@media (max-width:560px){form.enq{grid-template-columns:1fr}}
+
+/* footer */
+footer{background:var(--band);color:var(--band-ink);border-top:3px solid var(--accent)}
+.fg{display:grid;grid-template-columns:1.5fr 1fr 1.3fr;gap:36px;padding-block:56px 36px}
+.fg>*{min-width:0}
+.fg h4{font-family:var(--f-mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;font-weight:500}
+.fg ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.fg a{color:var(--band-ink);text-decoration:none;font-size:.95rem}
+.fg a:hover{color:var(--accent)}
+.fg p{color:var(--band-mute);font-size:.93rem;margin-top:12px}
+.fb{border-top:1px solid var(--band-line);padding-block:20px;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;font-size:.85rem;color:var(--band-mute)}
+.fb button{background:none;border:0;color:var(--band-ink);text-decoration:underline;padding:0;font-size:.85rem}
+@media (max-width:900px){.fg{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.fg{grid-template-columns:1fr}}
+
+/* floating */
+.fl{position:fixed;z-index:55;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}
+.fl a,.fl button{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:0;box-shadow:0 8px 20px -6px rgba(0,0,0,.5)}
+.fl .wa{background:#1FA855;color:#fff}
+.fl .up{background:var(--band);color:#fff;border:2px solid var(--accent)}
+.fl svg{width:24px;height:24px}
+.fl .up[hidden]{display:none}
+
+.facts>div,.topics>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cap>div,.hl>div{border-right:1px solid var(--band-line);border-bottom:1px solid var(--band-line)}
+
+/* safety popup */
+.saf{display:flex;flex-wrap:wrap;gap:20px 32px;justify-content:space-between;align-items:center}
+.modal .box.sm{max-width:540px;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;max-height:min(82vh,600px)}
+.pophd{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:20px 20px 14px;border-bottom:1px solid var(--line)}
+.pophd h3{font-size:1.4rem}
+.pophd p{color:var(--muted);font-size:.88rem;margin-top:4px}
+.modal .pophd .xx{position:static;flex:none}
+.pbody{overflow-y:auto;padding:4px 20px 18px;overscroll-behavior:contain}
+.pol{list-style:none;margin:0;padding:0}
+.pol li{display:grid;grid-template-columns:26px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.pol li:last-child{border-bottom:0}
+.pol svg{width:22px;height:22px;color:var(--link);margin-top:2px}
+.pol b{font-family:var(--f-disp);font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;display:block;line-height:1.2}
+.pol span{color:var(--muted);font-size:.9rem;line-height:1.45}
+.pnote{margin-top:6px;font-size:.82rem;color:var(--muted);border:1px dashed var(--line);padding:10px 12px;border-radius:2px}
+
+/* theme button */
+.tbtn{flex:none;width:36px;height:36px;margin-left:6px;display:grid;place-items:center;background:none;border:1px solid var(--band-line);border-radius:var(--r);color:var(--band-mute);transition:color .2s,border-color .2s}
+.tbtn:hover{color:var(--accent);border-color:var(--accent)}
+.tbtn svg{width:18px;height:18px}
+@media (max-width:1120px){.tbtn{margin-left:auto}.hb{margin-left:0}}
+.banner{margin-top:14px;display:flex;align-items:center;gap:18px;background:var(--band);color:#fff;padding:18px 22px;border-radius:var(--r);border-left:4px solid var(--accent)}
+.banner img{width:62px;height:auto;flex:none}
+.banner>div{min-width:0}
+.banner b{display:block;font-family:var(--f-disp);font-size:clamp(1.35rem,2.6vw,1.9rem);line-height:1.05;letter-spacing:.04em;text-transform:uppercase}
+.banner .bl{display:block;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--band-mute);margin-bottom:6px}
+.banner small{display:block;margin-top:6px;color:var(--band-mute);font-size:.85rem}
+/* about cards on one line */
+.topics{grid-template-columns:repeat(2,minmax(0,1fr))}
+.topics>div{padding:14px}
+.topics h4{font-size:1rem}
+.topics p{font-size:.84rem;line-height:1.45}
+@media (min-width:700px){.topics{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1100px){.topics{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media (max-width:519px){.topics{grid-template-columns:1fr}}
+
+/* projects table */
+.tbl{width:100%;border-collapse:collapse;font-size:.95rem;min-width:620px}
+.tbl th{background:var(--band);color:#fff;text-align:left;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:12px 16px;font-weight:500}
+.tbl td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top}
+.tbl td[rowspan]{border-right:1px solid var(--line);background:var(--bg)}
+.tbl td.yr{font-family:var(--f-mono);font-size:.85rem;white-space:nowrap;color:var(--muted)}
+.cl b{font-size:1rem;line-height:1.2}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+
+<header class="top">
+  <div class="w">
+    <div class="bar">
+      <a class="logo" href="#home" data-go aria-label="Home">
+        <img class="mk" src="img/logo.png" alt="" width="40" height="38">
+        <b data-s="company"></b>
+      </a>
+      <nav class="main" aria-label="Primary" id="nav"></nav>
+      <a class="btn gt" href="#contact" data-go>Get in Touch</a>
+      <button class="tbtn" id="tbtn" type="button"></button>
+      <button class="hb" id="hb" aria-label="Open menu" aria-expanded="false" aria-controls="mm"><i data-lucide="menu"></i></button>
+    </div>
+    <div class="mm" id="mm" hidden></div>
+  </div>
+</header>
+
+<main>
+<section id="home" class="hero">
+  <svg class="bg" id="heroSvg" viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+  <div class="w">
+    <div class="in">
+      <div class="co en"><span data-s="company"></span><span>/ Est. 2012 · Varanasi</span></div>
+      <h1 class="en">O&amp;M for <em>Railway Sidings</em>, CHP &amp; AHP in Power and Cement Plants.</h1>
+      <p class="sub en">Locomotives, tracks, signalling, manpower supply and civil works, delivered by experienced railway professionals for Adani, CLP, UltraTech, JK Cement, Vedanta and more.</p>
+      <div class="cta en">
+        <a class="btn btn-y" href="#capabilities" data-go>Explore Our Services <i data-lucide="arrow-right"></i></a>
+        <a class="btn btn-o" href="#contact" data-go>Discuss a Project</a>
+      </div>
+    </div>
+    <div class="strip">
+      <span>Railway siding · CHP · AHP · Loco · P-Way · S&amp;T</span>
+      <a href="#about" data-go>Scroll <i data-lucide="arrow-down"></i></a>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="sec">
+  <div class="w">
+    <div class="about">
+      <div class="txt">
+        <div><div class="chain">About Us</div><h2 class="rv">Railway O&M, run by railway people</h2></div>
+        <p class="rv" id="aboutIntro"></p>
+        <p class="rv" id="aboutIntro2"></p>
+      </div>
+      <div>
+        <figure class="fig"><img id="aboutImg" src="img/about.jpg" alt="Railway engineer inspecting points and crossings on site" loading="lazy"></figure>
+        <div class="banner"><img src="img/logo.png" alt="" width="64" height="60">
+          <div><span class="bl">Est. <span data-s="established"></span> · <span data-s="location"></span></span><b data-s="company"></b><small>Railway Siding, CHP &amp; AHP O&amp;M Services</small></div></div>
+      </div>
+    </div>
+    <dl class="facts rv" id="facts"></dl>
+    <div class="mv rv" id="mv"></div>
+    <div class="topics rv" id="topics"></div>
+    <div class="vals rv" id="vals"></div>
+  </div>
+</section>
+
+<section id="capabilities" class="sec band">
+  <div class="w">
+    <div class="head"><div class="chain">Services we provide</div><h2>Rail Siding &amp; Cement Plant Services</h2>
+      <p class="lede">Eight service lines covering railway siding operation and maintenance, plant logistics and civil works.</p></div>
+    <div class="cap rv" id="cap"></div>
+    <div class="ops rv" id="ops"><h3>Our team and strengths</h3></div>
+    <div class="ctaline rv"><h3>Need O&amp;M support for your siding or plant? Let's talk.</h3><a class="btn btn-n" href="#contact" data-go>Start a conversation <i data-lucide="arrow-right"></i></a></div>
+    <p class="fine">Service lines are listed from the company introduction (2025). Scope, manpower and equipment for each contract are agreed with the client before work starts.</p>
+  </div>
+</section>
+
+<section id="projects" class="sec">
+  <div class="w">
+    <div class="head"><div class="chain">Projects</div><h2>Ongoing &amp; completed work</h2>
+      <p class="lede">Contracts delivered since 2012 across power plants, cement works and railway sidings in Haryana, Uttar Pradesh, Punjab, Rajasthan and Maharashtra.</p></div>
+    <div class="tabs" id="ptabs" role="group" aria-label="Project status"><button class="tab" type="button" data-p="ongoing" aria-pressed="true">Ongoing</button><button class="tab" type="button" data-p="done" aria-pressed="false">Completed</button></div>
+    <div id="pbox" class="rv"></div>
+  </div>
+</section>
+
+<section id="why" class="sec" style="background:var(--surface);border-block:1px solid var(--line);padding-block:clamp(28px,4vw,48px)">
+  <div class="w">
+    <div class="head" style="margin-bottom:18px"><div class="chain">Why Choose Us</div><h2>What you can expect</h2></div>
+    <div class="why rv" id="whyGrid"></div>
+  </div>
+</section>
+
+<section id="safety" class="sec band" style="padding-block:clamp(32px,4.5vw,52px)">
+  <div class="w">
+    <div class="saf">
+      <div><div class="chain">Safety &amp; Quality Assurance</div><h2>Safe work. Checked work.</h2>
+        <p class="lede" style="margin-top:8px">The practices the company commits to on every site, in one short policy.</p></div>
+      <button class="btn btn-y" id="safBtn" type="button" aria-haspopup="dialog">View Safety &amp; Quality Policy <i data-lucide="arrow-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" class="sec band" style="padding-top:0">
+  <div class="w" style="padding-top:clamp(40px,6vw,72px)">
+    <div class="head"><div class="chain">Gallery</div><h2>On the line</h2>
+      <p class="lede">Hover to pause, use the arrows to browse, or select an image to enlarge.</p></div>
+  </div>
+  <div class="gal" id="gal" aria-roledescription="carousel" aria-label="Railway work gallery"><div class="gtrack" id="gtrack"></div></div>
+  <div class="w"><div class="gctl"><button id="gprev" aria-label="Previous images"><i data-lucide="chevron-left"></i></button><button id="gnext" aria-label="Next images"><i data-lucide="chevron-right"></i></button><small id="gstate">Auto-scrolling</small></div></div>
+</section>
+
+<section id="clients" class="sec">
+  <div class="w">
+    <div class="head"><div class="chain">Our Clients</div><h2>Our Major Clients</h2>
+      <p class="lede">Building Strong Partnerships Through Quality and Reliable Execution.</p></div>
+    <div class="cgrid rv" id="cgrid"></div>
+  </div>
+</section>
+
+<section id="registrations" class="sec" style="background:var(--surface);border-block:1px solid var(--line)">
+  <div class="w">
+    <div class="head"><div class="chain">Registration &amp; Certification</div><h2>Registered and compliant</h2>
+      <p class="lede">Statutory registrations held by Super Global Business Associates.</p></div>
+    <dl class="facts rv" id="regs"></dl>
+  </div>
+</section>
+
+<section id="highlights" class="sec band">
+  <div class="w">
+    <div class="head"><div class="chain">Company Highlights</div><h2>Super Global Business Associates</h2></div>
+    <div class="hl rv" id="hl"></div>
+  </div>
+</section>
+
+<section id="contact" class="sec band" style="border-top:1px solid var(--band-line)">
+  <div class="w">
+    <div class="head"><div class="chain">Contact Us</div><h2>Business enquiries</h2>
+      <p class="lede">Tell us about the siding or plant, the scope of work and the location. Mr. Amit Mishra's office reviews every enquiry.</p></div>
+    <div class="ct">
+      <div class="cinfo">
+        <div class="row"><i data-lucide="hard-hat"></i><div><small>Director</small><div class="v">Amit Mishra</div></div></div>
+        <div class="row"><i data-lucide="phone"></i><div><small>Phone</small><div class="v"><a id="telA" href="#"><span data-s="phone"></span></a><button class="cp2" data-copy="phone">Copy</button><br><a id="telB" href="#"><span data-s="phone2"></span></a><button class="cp2" data-copy="phone2">Copy</button></div></div></div>
+        <div class="row"><i data-lucide="mail"></i><div><small>Email</small><div class="v"><a id="mailA" href="#"><span data-s="email"></span></a><button class="cp2" data-copy="email">Copy</button><br><a id="mailB" href="#"><span data-s="email2"></span></a><button class="cp2" data-copy="email2">Copy</button></div></div></div>
+        <div class="row"><i data-lucide="map-pin"></i><div><small>Head office</small><div class="v" data-s="address"></div></div></div>
+        <div class="row"><i data-lucide="building-2"></i><div><small>Location</small><div class="v" data-s="location"></div></div></div>
+        <a class="btn btn-o" id="waBtn" href="#contact" style="width:fit-content"><i data-lucide="message-circle"></i> WhatsApp</a>
+      </div>
+      <form class="enq" id="enq" novalidate>
+        <h3>Submit a business enquiry</h3>
+        <div class="fld"><label for="f-name">Full name *</label><input id="f-name" name="name" autocomplete="name"><div class="er" id="e-name"></div></div>
+        <div class="fld"><label for="f-org">Organisation / company</label><input id="f-org" name="org" autocomplete="organization"><div class="er"></div></div>
+        <div class="fld"><label for="f-email">Email address *</label><input id="f-email" name="email" type="email" autocomplete="email"><div class="er" id="e-email"></div></div>
+        <div class="fld"><label for="f-phone">Phone number</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"><div class="er" id="e-phone"></div></div>
+        <div class="fld"><label for="f-subject">Subject *</label><input id="f-subject" name="subject"><div class="er" id="e-subject"></div></div>
+        <div class="fld"><label for="f-type">Type of enquiry *</label><select id="f-type" name="type"><option value="">Select a type</option></select><div class="er" id="e-type"></div></div>
+        <div class="fld full"><label for="f-msg">Project details / message *</label><textarea id="f-msg" name="msg" placeholder="Location, scope of work, expected timeline"></textarea><div class="er" id="e-msg"></div></div>
+        <div class="hp" aria-hidden="true"><label for="f-web">Leave this empty</label><input id="f-web" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="stat" id="fstat" hidden role="status"></div>
+        <div class="fld full"><button class="btn btn-y" type="submit" style="width:fit-content">Submit Business Enquiry <i data-lucide="arrow-right"></i></button></div>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="w">
+    <div class="fg">
+      <div>
+        <a class="logo" href="#home" data-go><img class="mk" src="img/logo.png" alt="" width="40" height="38"><b data-s="company"></b></a>
+        <p id="fIntro"></p>
+        <ul id="fsoc" style="margin-top:14px"></ul>
+      </div>
+      <div><h4>Quick links</h4><ul id="fq"></ul></div>
+      <div><h4>Contact</h4><ul>
+        <li>Director: Amit Mishra</li><li data-s="phone"></li><li data-s="phone2"></li><li data-s="email"></li><li data-s="email2"></li><li data-s="address"></li></ul></div>
+    </div>
+    <div class="fb"><span>© <span id="yr"></span> <span data-s="company"></span>. All rights reserved.</span>
+      <span><button id="adminOpen" type="button">Admin Login</button> · <button data-legal="privacy">Privacy Policy</button> · <button data-legal="terms">Terms and Conditions</button></span></div>
+  </div>
+</footer>
+
+<div class="fl"><button class="up" id="up" aria-label="Back to top" hidden><i data-lucide="arrow-up"></i></button><a class="wa" id="waFloat" href="#contact" aria-label="WhatsApp"><i data-lucide="message-circle"></i></a></div>
+<div id="layer"></div>
+
+<script>
+/* =====================================================================
+   SITE: the single place to edit content.
+   - Text in [SQUARE BRACKETS] is highlighted on the page as a placeholder.
+   - Images: set `src` to a path or data URL. Left null, a drawn demo visual is used.
+   - Form: set formEndpoint to a server URL that accepts a POST (see submitEnquiry).
+   ===================================================================== */
+const SITE={
+  company:'SUPER GLOBAL BUSINESS ASSOCIATES', location:'Varanasi, Uttar Pradesh', email:'superglobal4@gmail.com', email2:'amitpnadit.vns@gmail.com', phone:'+91 7275707273', phone2:'+91 9452637613',
+  address:'D-56/13, Mir Bagh, Soniya Pani Tanki, Sonia, Varanasi, Uttar Pradesh – 221010', established:'2012',
+  whatsapp:'917275707273',
+  social:{},
+  formEndpoint:'',
+  logo:null, certifications:[],
+  about:{
+    intro:'{company} (SGBA) is an established and steadily growing company with a strong track record of customer satisfaction in Railways and in the Coal Handling Plants (CHP) of power plants and cement plants, delivering Operation & Maintenance (O&M) services.',
+    intro2:'Founded in 2012 by Mr. Amit Mishra together with partners Mrs. Nitu Mishra and Mrs. Shivangi, SGBA has built an efficient team of professionals for the O&M of railway sidings in steel, cement and power plant industries, staying in constant touch with clients and reporting progress throughout.',
+    mission:'To provide quality services without compromise, keeping customer satisfaction high and delivering at a very competitive price.',
+    vision:'To be the trusted O&M partner for railway sidings and plant logistics across power, cement and steel industries, known for dependable execution and lasting client relationships.',
+    topics:[
+      ['Our commitment','Quality and service without compromise, at a very competent price, with customer satisfaction first.'],
+      ['Specialisation','O&M of railway sidings, CHP and AHP in thermal power and cement plants.'],
+      ['Locomotive expertise','Locomotive maintenance engineers and technicians, plus locomotive pilots (drivers).'],
+      ['Track and signalling','P-Way engineers (PWI and PWS) and signalling system maintenance professionals.'],
+      ['Rail operations staff','Ex-Railway station masters, station controllers, pointsmen and shuntmen.'],
+      ['Client communication','Staff who stay in constant touch with the client and report progress.']
+    ],
+    values:['Quality','Customer satisfaction','Competitive pricing','Reliability','Progress reporting','Experienced people']
+  },
+  /* name, icon, description: from the "Services we are providing" slide */
+  capabilities:[
+    ['Loco & Wagon Services','cog','Locomotive and wagon maintenance, special visits and annual maintenance contracts.'],
+    ['Wagon Tippler (O&M)','wrench','Operation and maintenance of wagon tipplers, including regular manpower for tippler operation.'],
+    ['P-Way & Signalling','route','Track maintenance, S&T systems and railway siding AMCs.'],
+    ['Dozer Maintenance','hammer','Maintenance support for dozers used in plant and siding operations.'],
+    ['Housekeeping Services','check-circle','Housekeeping for railway sidings, plant areas and related facilities.'],
+    ['Ash Disposal Area Management','mountain','Operation and management of ash disposal areas.'],
+    ['Manpower Hiring','users','Skilled railway and plant manpower, such as gatemen for panel operation and C&I / WT deployment.'],
+    ['Civil & Constructions','building-2','Civil works for sidings and plants, from sleeper replacement to monsoon preparation.']
+  ],
+  ops:['O&M of railway sidings in steel, cement and power plants','Locomotive maintenance engineers and technicians','Rail operation staff and locomotive pilots (drivers)','P-Way track maintenance engineers (PWI & PWS)','Signalling system maintenance professionals','Station masters, station controllers, pointsmen and shuntmen','Constant client contact and progress reporting'],
+  ongoing:[
+    ['Adani Power Limited','PLPB based O&M of Railways system, 2024-26','Adani Power Plant, Tirora, Gondia'],
+    ['Jhajjar Power Ltd (CLP / Apraava)','AMC for Railway Siding S&T, 2025','(2x660 MW) Jhajjar Power Limited, Jhajjar, Haryana'],
+    ['UPRVUNL / HTPS','AMC Railway Track & S&T','Harduaganj Thermal Power Station (UPRVUNL), Uttar Pradesh']
+  ],
+  completed:[
+    ['Jhajjar Power Ltd (CLP India)','(2x660 MW) Jhajjar Power Limited, Jhajjar, Haryana',[
+      ['AMC for Railway Siding S&T','2017-19'],['AMC for Railway Siding S&T','2020-22'],['AMC for Railway Siding S&T','2023-24'],
+      ['Hiring of Gateman for Panel Operation','2019'],['Hiring of Gateman for Panel Operation','2018'],['Hiring of Gateman for Panel Operation','2017'],
+      ['Ash Disposal Area (O&M)','2020'],['P-Way shallow screening, painting & tongue rail reconditioning work','2018-19'],['Modification & alteration of Railway S&T system','2017']]],
+    ['UltraTech Cement Ltd. (Aditya Birla Group)','Jhajjar Cement Works, Jhajjar, Matanhail, Haryana',[
+      ['Railway track maintenance work','2018-23'],['WTC O&M services','2021-22'],['Regular manpower for Wagon Tippler operation','2019-20'],['Pokland for clinker rake unloading','2019'],['Monsoon preparation work','2019'],['Left over project work (P-Way cleaning, clinker)','2018'],['Railway track sleeper replacement work','2018']]],
+    ['J.K. Cement Limited','Jharli (Grinding Unit), Jhajjar, Haryana – 124106',[
+      ['Turn-out dismantle, shifting & assembling','2018-19']]],
+    ['Larsen & Toubro (L&T-NPL)','(2x700 MW) Nabha Power Limited, Nalash, Patiala, Rajpura, Punjab',[
+      ['AMC of P-Way & S&T system','2017-18'],['AMC of P-Way & S&T system','2016-17'],['Deployment of manpower for C&I / WT','2017-18'],['Deployment of manpower for C&I / WT','2016-17']]],
+    ['Vedanta Group (Energo Const)','(3x660 MW) Talwandi Sabo Power Limited, Bhatinda, Punjab',[
+      ['AMC for O&M of Railway siding, TSPL','2015']]],
+    ['Jaiprakash Associates Limited','Dalla Cement Works, Dalla, Uttar Pradesh',[
+      ['AMC for locomotive engines','2014'],['AMC for locomotive engines','2013']]],
+    ['Adani Power Limited','(2x660 MW) Kawai Thermal Power Station, Salpura, Baran, Rajasthan',[
+      ['Locomotive special visit & repairing','2014']]],
+    ['Lanco Power Limited (Energo Const)','(2x600 MW) Anpara Thermal Power Plant, Sonbhadra, U.P.',[
+      ['Stone picking from conveyor, CHP','2012-13']]]
+  ],
+  registrations:[['PAN','ACGFS1054G'],['GST Reg.','09ACGFS1054G2Z5'],['MSME (Udyam)','UDYAM-UP-75-0082771'],['EPF Reg.','UP/VNS/0059327/000'],['Factory Reg.','5276 /7-V-15835'],['ESIC Reg.','13280513970010999'],['Labour Licence (Maharashtra)','2452400110046695']],
+  gallery:[
+    {caption:'Track maintenance crew',kind:'track',src:'img/gallery-1.jpg'},
+    {caption:'Rail cutting and grinding',kind:'track',src:'img/gallery-2.jpg'},
+    {caption:'Points and track layout',kind:'points',src:'img/gallery-3.jpg'},
+    {caption:'Sleeper handling by rail crane',kind:'machine',src:'img/gallery-4.jpg'},
+    {caption:'Track works in the yard',kind:'crew',src:'img/gallery-5.jpg'},
+    {caption:'Equipment inspection',kind:'crew',src:'img/gallery-6.jpg'}
+  ],
+  clients:[
+    {name:'Adani Infrastructures',logo:'img/client-adani.png'},
+    {name:'Jhajjar Power Limited (CLP / Apraava)',logo:'img/client-clp.png'},
+    {name:'Lanco Anpara Power Limited',logo:'img/client-lanco.png'},
+    {name:'Nabha Power Limited (L&T)',logo:'img/client-npl.png'},
+    {name:'Vedanta Power Limited (TSPL)',logo:'img/client-vedanta.png'},
+    {name:'UltraTech Cement Limited',logo:'img/client-ultratech.png'},
+    {name:'JP Cement Works, Dalla',logo:'img/client-jaypee.png'},
+    {name:'JK Cement Works',logo:'img/client-jk.png'},
+    {name:'Energo Constructions Limited',logo:'img/client-energo.png'},
+    {name:'Shapoorji Pallonji',logo:'img/client-sp.png'},
+    {name:'UPRVUNL (HTPS)',logo:'img/client-uprvunl.png'},
+    {name:'Lalitalaxmi Infra Support, Mumbai'}
+  ],
+  why:[
+    ['Constant client contact','message-circle','Our staff stay in touch with the client and report progress throughout the work.'],
+    ['Experienced professionals','users','Loco engineers, P-Way and S&T specialists, ex-Railway station masters and loco pilots.'],
+    ['Quality without compromise','shield-check','Committed to quality service at every site, whatever the contract size.'],
+    ['Competitive pricing','file-text','Services delivered at a very competent price.'],
+    ['Repeat clients','clipboard-check','Multi-year AMCs with Jhajjar Power, UltraTech and Nabha Power.'],
+    ['Direct access to the Director','phone','Enquiries are reviewed by Mr. Amit Mishra\'s office and answered directly.']
+  ],
+  safety:[
+    ['Safe working practices','hard-hat','Commitment to safe methods of work on and near the track.'],
+    ['Site supervision','eye','Supervised work areas with defined responsibilities.'],
+    ['Quality inspection','search','Inspection of completed work before handover.'],
+    ['Workforce awareness and training','users','Briefings and awareness for every crew member.'],
+    ['Operational discipline','alert-triangle','Adherence to permits, access windows and instructions.'],
+    ['Material quality checks','clipboard-check','Checks on materials as they arrive and before use.'],
+    ['Applicable railway standards','file-text','Work carried out to the standards that apply to each contract.'],
+    ['Monitoring and documentation','gauge','Progress and quality records kept for each project.']
+  ],
+  stats:[{value:14,suffix:'+',label:'Years since 2012'},{value:12,suffix:'',label:'Client organisations'},{value:8,suffix:'',label:'Service lines'},{value:3,suffix:'',label:'Ongoing contracts'}],
+  highlights:[],
+  enquiryTypes:['Railway Siding O&M / AMC','P-Way & Signalling','Loco & Wagon Services','Wagon Tippler O&M','Manpower Hiring','Housekeeping / Ash Disposal','Civil & Constructions','General Enquiry'],
+  nav:[['Home','home'],['About Us','about'],['Services','capabilities'],['Projects','projects'],['Our Clients','clients'],['Contact Us','contact']]
+};
+
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const H=s=>esc(String(s).replace(/\{company\}/g,SITE.company)).replace(/\[[A-Z0-9 ,.:'\/\-]+\]/g,m=>`<span class="ph">${m}</span>`);
+const isPh=v=>/^\s*\[.*\]\s*$/.test(v||'');
+const ICON={
+'sun':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+'moon':'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>',
+'monitor':'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+'menu':'<path d="M4 6h16M4 12h16M4 18h16"/>',
+'arrow-right':'<path d="M5 12h14M12 5l7 7-7 7"/>',
+'arrow-down':'<path d="M12 5v14M19 12l-7 7-7-7"/>',
+'arrow-up':'<path d="M12 19V5M5 12l7-7 7 7"/>',
+'chevron-left':'<path d="M15 18l-6-6 6-6"/>',
+'chevron-right':'<path d="M9 18l6-6-6-6"/>',
+'x':'<path d="M18 6L6 18M6 6l12 12"/>',
+'message-circle':'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>',
+'phone':'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+'mail':'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+'map-pin':'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
+'building-2':'<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2M10 6h4M10 10h4M10 14h4M10 18h4"/>',
+'wrench':'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/>',
+'layers':'<path d="M12 2 2 7l10 5 10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+'ruler':'<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/>',
+'mountain':'<path d="m8 3 4 8 5-5 5 15H2z"/>',
+'truck':'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2M15 18H9M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+'users':'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+'shield-check':'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+'clipboard-check':'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+'gauge':'<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+'cog':'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+'route':'<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+'hammer':'<path d="m15 12-8.37 8.37a1 1 0 1 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.91-1.91A2 2 0 0 1 19 8.17V7l-2.26-2.26a6 6 0 0 0-4.2-1.76L9 2.96l.92.82A6.2 6.2 0 0 1 12 8.4V10l2 2h1.17a2 2 0 0 1 1.41.59L18.5 14.5"/>',
+'calendar':'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+'file-text':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/>',
+'zap':'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+'eye':'<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+'search':'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+'alert-triangle':'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>',
+'check-circle':'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>',
+'hard-hat':'<path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5M4 15v-3a6 6 0 0 1 6-6M14 6a6 6 0 0 1 6 6v3"/>'
+};
+const icons=()=>{$$('i[data-lucide]').forEach(i=>{const d=ICON[i.dataset.lucide];if(!d)return;i.outerHTML=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${d}</svg>`})};
+document.documentElement.classList.add('js');
+
+/* ---------- demo scenes (drawn placeholders, replaced by SITE image paths) ---------- */
+function persp(vx,vy,yb,w0,w1){
+  let s=`<polygon points="${vx-w0},${vy} ${vx+w0},${vy} ${vx+w1},${yb} ${vx-w1},${yb}" fill="#7C8794"/>`;
+  for(let i=1;i<=14;i++){const t=i/14,k=t*t,y=vy+(yb-vy)*k,h=w0+(w1-w0)*k;s+=`<rect x="${vx-h*1.05}" y="${y}" width="${h*2.1}" height="${1.5+9*k}" fill="#5B4B3C"/>`}
+  const rx=(w1*.58);
+  s+=`<path d="M${vx-3},${vy} L${vx-rx},${yb} M${vx+3},${vy} L${vx+rx},${yb}" stroke="#E6EBF1" stroke-width="4" fill="none"/>`;
+  return s;
+}
+const scenes={
+  track:()=>`<rect y="210" width="800" height="260" fill="#56606B"/><polygon points="0,210 120,160 260,205 380,150 520,200 680,155 800,205 800,212 0,212" fill="#3A4757"/>`+persp(400,210,470,18,330),
+  ballast:()=>{let s=`<rect y="0" width="800" height="470" fill="#8A95A3"/>`;for(let i=0;i<260;i++){const x=(i*97)%800,y=(i*53)%470,r=3+(i%5);s+=`<ellipse cx="${x}" cy="${y}" rx="${r*1.4}" ry="${r}" fill="${i%3?'#6C7785':'#A5AFBB'}"/>`}
+    s+=`<rect x="0" y="120" width="800" height="46" fill="#5B4B3C"/><rect x="0" y="300" width="800" height="46" fill="#5B4B3C"/><rect x="0" y="40" width="800" height="14" fill="#DDE4EC"/><rect x="0" y="230" width="800" height="14" fill="#DDE4EC"/><rect x="0" y="410" width="800" height="14" fill="#DDE4EC"/>`;return s},
+  machine:()=>`<rect y="320" width="800" height="150" fill="#6C7785"/><rect y="318" width="800" height="8" fill="#DDE4EC"/><rect x="150" y="190" width="460" height="100" fill="#F2A900"/><rect x="170" y="150" width="130" height="60" fill="#F2A900"/><rect x="185" y="162" width="100" height="34" fill="#BFD3E6"/><rect x="330" y="170" width="260" height="14" fill="#0B1F3A"/><circle cx="210" cy="305" r="22" fill="#2A3A50"/><circle cx="330" cy="305" r="22" fill="#2A3A50"/><circle cx="500" cy="305" r="22" fill="#2A3A50"/><circle cx="580" cy="305" r="22" fill="#2A3A50"/><rect x="390" y="290" width="14" height="40" fill="#2A3A50"/><rect x="440" y="290" width="14" height="40" fill="#2A3A50"/><rect x="50" y="90" width="6" height="228" fill="#2A3A50"/><rect x="40" y="90" width="60" height="6" fill="#2A3A50"/>`,
+  bridge:()=>`<rect y="360" width="800" height="110" fill="#456A8F"/><rect x="120" y="220" width="40" height="150" fill="#6C7785"/><rect x="380" y="220" width="40" height="150" fill="#6C7785"/><rect x="640" y="220" width="40" height="150" fill="#6C7785"/><path d="M40 220 L160 130 L280 220 L400 130 L520 220 L640 130 L760 220" fill="none" stroke="#2A3A50" stroke-width="8"/><rect x="40" y="214" width="720" height="14" fill="#2A3A50"/><rect x="40" y="130" width="720" height="6" fill="#2A3A50" opacity=".6"/><rect x="40" y="200" width="720" height="6" fill="#DDE4EC"/>`,
+  civil:()=>`<polygon points="40,430 240,170 560,170 760,430" fill="#7A6A55"/><polygon points="120,430 270,230 530,230 680,430" fill="#8E7C65"/><polygon points="200,430 300,290 500,290 600,430" fill="#A39079"/><rect x="230" y="150" width="340" height="22" fill="#6C7785"/><rect x="230" y="144" width="340" height="5" fill="#DDE4EC"/><circle cx="400" cy="400" r="34" fill="#2A3A50"/><circle cx="400" cy="400" r="24" fill="#456A8F"/><rect y="430" width="800" height="40" fill="#5E7A53"/>`,
+  station:()=>`<rect y="330" width="800" height="140" fill="#56606B"/><rect x="0" y="300" width="800" height="48" fill="#C6CED8"/><rect x="0" y="296" width="800" height="6" fill="#F2A900"/><rect x="60" y="130" width="680" height="22" fill="#0B1F3A"/><g fill="#2A3A50"><rect x="110" y="150" width="14" height="150"/><rect x="280" y="150" width="14" height="150"/><rect x="450" y="150" width="14" height="150"/><rect x="620" y="150" width="14" height="150"/></g><rect x="180" y="262" width="80" height="12" fill="#5B4B3C"/><rect x="530" y="262" width="80" height="12" fill="#5B4B3C"/><rect y="400" width="800" height="8" fill="#DDE4EC"/>`,
+  supply:()=>{let s=`<rect y="330" width="800" height="140" fill="#6C7785"/>`;for(let r=0;r<5;r++)for(let c=0;c<8-r;c++)s+=`<rect x="${90+c*80+r*40}" y="${290-r*38}" width="74" height="32" fill="${r%2?'#6B5C4D':'#5B4B3C'}"/>`;s+=`<rect x="60" y="326" width="680" height="8" fill="#DDE4EC"/><rect x="60" y="346" width="680" height="8" fill="#DDE4EC"/>`;return s},
+  crew:()=>`<rect y="250" width="800" height="220" fill="#56606B"/>`+persp(400,250,470,14,300)+[250,400,550].map((x,i)=>`<g transform="translate(${x},${300+i%2*18})"><circle cx="0" cy="0" r="16" fill="#E8C9A6"/><rect x="-18" y="-18" width="36" height="10" rx="3" fill="#F2A900"/><rect x="-20" y="16" width="40" height="64" fill="#F2A900"/><rect x="-12" y="80" width="10" height="48" fill="#0B1F3A"/><rect x="2" y="80" width="10" height="48" fill="#0B1F3A"/><rect x="-20" y="40" width="40" height="6" fill="#E6EBF1"/></g>`).join(''),
+  points:()=>`<rect y="0" width="800" height="470" fill="#6B7684"/>`+[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19].map(i=>`<rect x="${40+i*38}" y="${i>6?150:200}" width="14" height="${i>6?210:110}" fill="#5B4B3C" transform="skewX(0)"/>`).join('')+`<path d="M0 255 H800 M0 245 H800" stroke="#E6EBF1" stroke-width="5" fill="none"/><path d="M260 255 C 420 255 480 330 800 330 M260 245 C 420 245 480 320 800 320" stroke="#E6EBF1" stroke-width="5" fill="none"/>`
+};
+function scene(kind,label){
+  const inner=(scenes[kind]||scenes.track)();
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FA9C4"/><stop offset="1" stop-color="#E6ECF2"/></linearGradient></defs><rect width="800" height="500" fill="url(#s)"/>${inner}<rect y="470" width="800" height="30" fill="#0B1F3A" opacity=".85"/><text x="16" y="490" font-family="monospace" font-size="12" fill="#ffffff" letter-spacing="2">DEMO VISUAL  ${esc((label||'').toUpperCase())}</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+const imgOf=(o,label)=>o.src||scene(o.kind,label);
+
+/* ---------- bind text ---------- */
+function bind(){
+  $$('[data-s]').forEach(el=>{const v=SITE[el.dataset.s]||'';el.textContent=v;if(isPh(v))el.classList.add('ph')});
+  $('#yr').textContent=new Date().getFullYear();
+  document.title='Super Global Business Associates | Railway Siding, CHP & AHP O&M Services';
+  const tel=SITE.phone.replace(/[^\d+]/g,''); $('#telA').href=isPh(SITE.phone)?'#contact':'tel:'+tel;
+  $('#mailA').href=isPh(SITE.email)?'#contact':'mailto:'+SITE.email;$('#mailB').href='mailto:'+SITE.email2;$('#telB').href='tel:'+SITE.phone2.replace(/[^\d+]/g,'');
+  const wa=SITE.whatsapp?'https://wa.me/'+SITE.whatsapp.replace(/\D/g,''):'';
+  [$('#waBtn'),$('#waFloat')].forEach(a=>{if(wa){a.href=wa;a.target='_blank';a.rel='noopener'}else{a.href='#contact';a.dataset.go=''}});
+}
+
+/* ---------- nav ---------- */
+function buildNav(){
+  $('#nav').innerHTML=SITE.nav.map(([t,id])=>`<a href="#${id}" data-go data-id="${id}">${t}</a>`).join('');
+  $('#mm').innerHTML=SITE.nav.map(([t,id])=>`<a href="#${id}" data-go>${t}</a>`).join('')+'<a class="btn btn-y" href="#contact" data-go>Get in Touch</a>';
+  const hb=$('#hb'),mm=$('#mm');
+  hb.onclick=()=>{const o=mm.hidden;mm.hidden=!o;hb.setAttribute('aria-expanded',String(o));hb.setAttribute('aria-label',o?'Close menu':'Open menu')};
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('[data-go]'); if(!a)return;
+    const id=(a.getAttribute('href')||'').slice(1); const t=id&&document.getElementById(id); if(!t)return;
+    e.preventDefault(); t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});
+    mm.hidden=true;hb.setAttribute('aria-expanded','false');
+  });
+  const links=$$('#nav a');
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.dataset.id===en.target.id))}}),{rootMargin:'-45% 0px -50% 0px'});
+  SITE.nav.forEach(([,id])=>{const s=document.getElementById(id);s&&io.observe(s)});
+}
+
+/* ---------- hero animation ---------- */
+function hero(){
+  const svg=$('#heroSvg'),vx=830,vy=300,yb=760;
+  let s=`<defs><linearGradient id="hs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07142A"/><stop offset=".55" stop-color="#17355E"/><stop offset="1" stop-color="#C98A1E"/></linearGradient></defs><rect width="1200" height="${vy+8}" fill="url(#hs)"/><rect y="${vy}" width="1200" height="${yb-vy}" fill="#0E1B2C"/>`;
+  s+=`<polygon points="${vx-26},${vy} ${vx+26},${vy} ${vx+560},${yb} ${vx-560},${yb}" fill="#3A4757"/>`;
+  s+=`<g id="hsl"></g><path d="M${vx-4},${vy} L${vx-330},${yb} M${vx+4},${vy} L${vx+330},${yb}" stroke="#DCE4EE" stroke-width="5" fill="none"/>`;
+  s+=`<g id="hpl"></g>`;
+  svg.innerHTML=s;
+  const sl=$('#hsl',svg),pl=$('#hpl',svg),N=16,ns='http://www.w3.org/2000/svg';
+  const rects=[],poles=[];
+  for(let i=0;i<N;i++){const r=document.createElementNS(ns,'rect');r.setAttribute('fill','#5B4B3C');sl.appendChild(r);rects.push(r)}
+  for(let i=0;i<8;i++){const g=document.createElementNS(ns,'rect');g.setAttribute('fill','#1C2E48');pl.appendChild(g);poles.push(g)}
+  let p=0,last=performance.now();
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function draw(){
+    rects.forEach((r,i)=>{const t=((i+p)%N)/N,k=Math.pow(t,2.2),y=vy+(yb-vy)*k,half=24+520*k;r.setAttribute('x',vx-half);r.setAttribute('y',y);r.setAttribute('width',half*2);r.setAttribute('height',1.5+13*k)});
+    poles.forEach((g,i)=>{const t=((i+p*.5)%8)/8,k=Math.pow(t,2.2),y=vy+(yb-vy)*k,x=vx+(i%2?1:-1)*(80+620*k),h=30+420*k;g.setAttribute('x',x-3-3*k);g.setAttribute('y',y-h);g.setAttribute('width',6+6*k);g.setAttribute('height',h)});
+  }
+  draw();
+  if(reduce)return;
+  (function loop(now){const dt=Math.min(now-last,60);last=now;p=(p+dt*0.0011*1)%N*1;draw();requestAnimationFrame(loop)})(last);
+}
+
+/* ---------- about ---------- */
+function about(){
+  const a=SITE.about;
+  $('#aboutIntro').innerHTML=H(a.intro); $('#aboutIntro2').innerHTML=H(a.intro2);
+  $('#facts').innerHTML=[['Company','{company}'],['Established',SITE.established],['Location',SITE.location],['Industry','O&M of railway sidings, CHP & AHP, power and cement plants'],['Founder','Mr. Amit Mishra'],['Partners','Mrs. Nitu Mishra & Mrs. Shivangi']].map(([k,v])=>`<div><dt>${k}</dt><dd>${H(v)}</dd></div>`).join('');
+  $('#mv').innerHTML=`<div><h3>Mission</h3><p>${H(a.mission)}</p></div><div><h3>Vision</h3><p>${H(a.vision)}</p></div>`;
+  $('#topics').innerHTML=a.topics.map(([t,d])=>`<div><h4>${H(t)}</h4><p>${H(d)}</p></div>`).join('');
+  $('#vals').innerHTML=a.values.map(v=>`<span>${v}</span>`).join('');
+}
+
+/* ---------- capabilities, why, safety ---------- */
+function simple(){
+  $('#cap').innerHTML=SITE.capabilities.map(([t,i,d])=>`<div><i data-lucide="${i}"></i><h4>${H(t)}</h4><p style="color:var(--band-mute);font-size:.92rem;line-height:1.45">${H(d||'')}</p></div>`).join('');
+  $('#ops').innerHTML+=SITE.ops.map(o=>`<div><i data-lucide="check-circle"></i><span>${H(o)}</span></div>`).join('');
+  $('#whyGrid').innerHTML=SITE.why.map(([t,i,d])=>`<div><i data-lucide="${i}"></i><h4>${H(t)}</h4><p>${H(d)}</p></div>`).join('');
+}
+
+
+
+/* ---------- gallery ---------- */
+const GAL={x:0,pending:0,paused:false,items:[]};
+function gallery(){
+  GAL.items=SITE.gallery.map(g=>({src:imgOf(g,g.caption),caption:g.caption}));
+  const mk=(copy)=>GAL.items.map((g,i)=>`<button class="gi" data-i="${i}" ${copy?'aria-hidden="true" tabindex="-1"':''}><img src="${g.src}" alt="${copy?'':esc(g.caption)}" loading="lazy" draggable="false"><span>${esc(g.caption)}</span></button>`).join('');
+  const tr=$('#gtrack'); tr.innerHTML=mk(false)+mk(true);
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let last=performance.now(),half=0;
+  const measure=()=>{half=tr.scrollWidth/2};
+  measure(); addEventListener('resize',measure); addEventListener('load',measure);
+  const gal=$('#gal'),st=$('#gstate');
+  const setP=v=>{GAL.paused=v;st.textContent=v?'Paused':(reduce?'Use the arrows':'Auto-scrolling')};
+  gal.addEventListener('mouseenter',()=>setP(true));gal.addEventListener('mouseleave',()=>setP(false));
+  gal.addEventListener('focusin',()=>setP(true));gal.addEventListener('focusout',()=>setP(false));
+  if(reduce)st.textContent='Use the arrows';
+  (function loop(now){
+    const dt=Math.min(now-last,60);last=now;
+    let d=(GAL.paused||reduce||document.hidden||GAL.lb?0:dt*0.04);
+    if(GAL.pending){const s=GAL.pending*0.14;d+=s;GAL.pending-=s;if(Math.abs(GAL.pending)<.5)GAL.pending=0}
+    GAL.x+=d; if(half){GAL.x=((GAL.x%half)+half)%half} tr.style.transform=`translate3d(${-GAL.x}px,0,0)`;
+    requestAnimationFrame(loop)})(last);
+  const step=()=>($('.gi',tr).offsetWidth+16)*1.5;
+  $('#gprev').onclick=()=>GAL.pending-=step(); $('#gnext').onclick=()=>GAL.pending+=step();
+  tr.onclick=e=>{const b=e.target.closest('.gi');if(b)openLB(+b.dataset.i,b)};
+}
+let lbIdx=0,lbFrom=null;
+function openLB(i,from){
+  lbIdx=i;lbFrom=from;GAL.lb=true;
+  const L=document.createElement('div');L.className='lb';L.id='lb';L.setAttribute('role','dialog');L.setAttribute('aria-modal','true');L.setAttribute('aria-label','Enlarged image');
+  L.innerHTML=`<button class="x" aria-label="Close"><i data-lucide="x"></i></button><img alt=""><div class="cp"><button class="pv" aria-label="Previous image"><i data-lucide="chevron-left"></i></button><span class="ct2"></span><button class="nx" aria-label="Next image"><i data-lucide="chevron-right"></i></button></div>`;
+  $('#layer').appendChild(L);icons();
+  const show=()=>{const g=GAL.items[lbIdx];$('img',L).src=g.src;$('img',L).alt=g.caption;$('.ct2',L).textContent=`${g.caption}  (${lbIdx+1} / ${GAL.items.length})`};
+  const go=d=>{lbIdx=(lbIdx+d+GAL.items.length)%GAL.items.length;show()};
+  const close=()=>{L.remove();GAL.lb=false;document.removeEventListener('keydown',key);lbFrom&&lbFrom.focus()};
+  const key=e=>{if(e.key==='Escape')close();if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1)};
+  $('.x',L).onclick=close;$('.pv',L).onclick=()=>go(-1);$('.nx',L).onclick=()=>go(1);
+  L.addEventListener('click',e=>{if(e.target===L)close()});
+  document.addEventListener('keydown',key);show();$('.x',L).focus();
+}
+
+/* ---------- clients ---------- */
+function clients(){
+  $('#cgrid').innerHTML=SITE.clients.map(c=>`<div class="cl ${c.logo?'lg':''}">${c.logo?`<img src="${esc(c.logo)}" alt="${esc(c.name)} logo" loading="lazy" onerror="this.outerHTML='&lt;b&gt;'+this.alt.replace(/ logo$/,'')+'&lt;/b&gt;'">`:(isPh(c.name)?`<div class="slot"><i></i><b>${H(c.name)}</b><span>Logo slot</span></div>`:`<b>${esc(c.name)}</b>`)}</div>`).join('');
+}
+
+/* ---------- leadership, highlights ---------- */
+function highlights(){
+  const hl=$('#hl');
+  if(SITE.stats.length){
+    hl.innerHTML=SITE.stats.map(s=>`<div><div class="n" data-n="${s.value}" data-suf="${esc(s.suffix||'')}">0</div><div class="t">${esc(s.label)}</div></div>`).join('');
+    const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;io.disconnect();$$('.n',hl).forEach(n=>{const to=+n.dataset.n,t0=performance.now();(function f(t){const k=Math.min((t-t0)/1400,1);n.textContent=Math.round(to*k)+n.dataset.suf;k<1&&requestAnimationFrame(f)})(t0)})}));io.observe(hl);
+  }else{
+    hl.innerHTML=SITE.highlights.map(([a,b])=>`<div><div class="n">${a}</div><div class="t">${b}</div></div>`).join('');
+  }
+}
+
+/* ---------- contact form ---------- */
+function form(){
+  const f=$('#enq'),t0=Date.now();
+  $('#f-type').innerHTML+=SITE.enquiryTypes.map(t=>`<option>${t}</option>`).join('');
+  $$('[data-copy]').forEach(b=>b.onclick=async()=>{const v=SITE[b.dataset.copy];try{await navigator.clipboard.writeText(v);b.textContent='Copied'}catch(e){const r=document.createRange();r.selectNodeContents(b.previousSibling||b.parentNode);getSelection().removeAllRanges();getSelection().addRange(r);b.textContent='Selected'}setTimeout(()=>b.textContent='Copy',1600)});
+  const rules={name:v=>v.trim()?'':'Enter your full name.',email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())?'':'Enter a valid email address, for example name@company.com.',
+    phone:v=>!v.trim()||v.replace(/\D/g,'').length>=8?'':'Enter at least 8 digits, or leave this empty.',subject:v=>v.trim()?'':'Enter a subject.',type:v=>v?'':'Select the type of enquiry.',msg:v=>v.trim().length>=20?'':'Describe the project in at least 20 characters.'};
+  const ids={name:'f-name',email:'f-email',phone:'f-phone',subject:'f-subject',type:'f-type',msg:'f-msg'};
+  const check=k=>{const el=$('#'+ids[k]);const m=rules[k](el.value);$('#e-'+k).textContent=m;el.closest('.fld').classList.toggle('bad',!!m);el.setAttribute('aria-invalid',m?'true':'false');return !m};
+  Object.keys(ids).forEach(k=>$('#'+ids[k]).addEventListener('blur',()=>check(k)));
+  const stat=(cls,html)=>{const s=$('#fstat');s.hidden=false;s.className='stat '+cls;s.innerHTML=html;icons()};
+  f.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const ok=Object.keys(ids).map(check).every(Boolean);
+    if(!ok){stat('err','Some fields need attention. Fix the highlighted fields and submit again.');const bad=$('.fld.bad input,.fld.bad select,.fld.bad textarea',f);bad&&bad.focus();return}
+    if($('#f-web').value||Date.now()-t0<3000){stat('err','This enquiry could not be accepted. Wait a few seconds and submit again.');return}
+    const data={name:$('#f-name').value,org:$('#f-org').value,email:$('#f-email').value,phone:$('#f-phone').value,subject:$('#f-subject').value,type:$('#f-type').value,message:$('#f-msg').value};
+    const text=`Enquiry type: ${data.type}\nSubject: ${data.subject}\nName: ${data.name}\nOrganisation: ${data.org||'-'}\nEmail: ${data.email}\nPhone: ${data.phone||'-'}\n\n${data.message}`;
+    if(SITE.formEndpoint){
+      try{const r=await fetch(SITE.formEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!r.ok)throw new Error(r.status);stat('ok','Thank you. Your enquiry has been sent to the Director\'s office.');f.reset()}
+      catch(err){stat('err','The enquiry could not be sent. Check your connection and try again, or contact the office directly using the details beside this form.')}
+      return;
+    }
+    /* No server endpoint: prepare the enquiry for WhatsApp and email. Nothing is sent until the visitor taps each button. */
+    const wd=(SITE.whatsapp||'').replace(/\D/g,'');
+    const waHref=wd?'https://wa.me/'+wd+'?text='+encodeURIComponent(text):'';
+    const mailHref=isPh(SITE.email)?'':'mailto:'+SITE.email+'?subject='+encodeURIComponent('Business enquiry: '+data.subject)+'&body='+encodeURIComponent(text);
+    const gmailHref=isPh(SITE.email)?'':'https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(SITE.email)+'&su='+encodeURIComponent('Business enquiry: '+data.subject)+'&body='+encodeURIComponent(text);
+    const btn=(href,label,icon)=>href?`<a class="btn btn-n" href="${href}" target="_blank" rel="noopener" style="padding:.5rem 1rem"><i data-lucide="${icon}"></i> ${label}</a>`:`<span class="pill">${label}: contact number or email not set yet</span>`;
+    stat('info',`<b>Your enquiry is ready but not sent yet.</b> Send it to the company on both channels:<div style="display:flex;flex-wrap:wrap;gap:10px">${btn(waHref,'Send on WhatsApp','message-circle')}${btn(mailHref,'Email (phone or mail app)','mail')}${btn(gmailHref,'Email via Gmail (desktop)','mail')}</div><pre id="cpTxt"></pre><button class="btn btn-o" type="button" id="cpBtn" style="width:fit-content;padding:.4rem .9rem;color:var(--ink)">Copy enquiry text</button>`);
+    $('#cpTxt').textContent=text;
+    $('#cpBtn').onclick=async()=>{try{await navigator.clipboard.writeText(text);$('#cpBtn').textContent='Copied'}catch(e){const r=document.createRange();r.selectNodeContents($('#cpTxt'));getSelection().removeAllRanges();getSelection().addRange(r);$('#cpBtn').textContent='Text selected'}};
+  });
+}
+
+
+/* ---------- safety popup ---------- */
+function safetyPop(){
+  const btn=$('#safBtn');
+  btn.onclick=()=>{
+    const M=document.createElement('div');M.className='modal';M.setAttribute('role','dialog');M.setAttribute('aria-modal','true');M.setAttribute('aria-labelledby','popT');
+    const certs=SITE.certifications.length?'Certifications: '+SITE.certifications.map(esc).join(', '):'';
+    M.innerHTML=`<div class="box sm"><div class="pophd"><div><h3 id="popT">Safety &amp; Quality Policy</h3><p>Scroll to read all eight commitments.</p></div><button class="xx" aria-label="Close"><i data-lucide="x"></i></button></div><div class="pbody" tabindex="0"><ul class="pol">${SITE.safety.map(([t,i,d])=>`<li><i data-lucide="${i}"></i><div><b>${H(t)}</b><span>${H(d)}</span></div></li>`).join('')}</ul>${certs?`<p class="pnote">${certs}</p>`:''}</div></div>`;
+    $('#layer').appendChild(M);icons();
+    const close=()=>{M.remove();document.removeEventListener('keydown',k);btn.focus()};
+    const k=e=>{if(e.key==='Escape')close()};
+    document.addEventListener('keydown',k);M.addEventListener('click',e=>{if(e.target===M)close()});$('.xx',M).onclick=close;$('.xx',M).focus();
+  };
+}
+
+
+/* ---------- theme: one button switches between light and dark ---------- */
+function theme(){
+  const root=document.documentElement,KEY='sgba-theme',btn=$('#tbtn'),mq=matchMedia('(prefers-color-scheme: dark)');
+  try{const v=localStorage.getItem(KEY);if(v==='light'||v==='dark')root.setAttribute('data-theme',v)}catch(e){}
+  const eff=()=>root.getAttribute('data-theme')||(mq.matches?'dark':'light');
+  const draw=()=>{const d=eff()==='dark';btn.innerHTML=`<i data-lucide="${d?'sun':'moon'}"></i>`;btn.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');btn.title=d?'Light mode':'Dark mode';icons()};
+  btn.onclick=()=>{const n=eff()==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem(KEY,n)}catch(e){}draw()};
+  if(mq.addEventListener)mq.addEventListener('change',draw);
+  draw();
+}
+
+/* ---------- footer, legal, floating ---------- */
+function footer(){
+  $('#fIntro').innerHTML=H('O&M services for railway sidings, CHP & AHP, locomotives, tracks, signalling, manpower supply and civil works.');
+  $('#fq').innerHTML=[['About Us','about'],['Services','capabilities'],['Projects','projects'],['Our Clients','clients'],['Registrations','registrations']].map(([t,i])=>`<li><a href="#${i}" data-go>${t}</a></li>`).join('');
+  const soc=Object.entries(SITE.social||{});$('#fsoc').innerHTML=soc.map(([k,u])=>`<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(k)}</a></li>`).join('');
+  $$('[data-legal]').forEach(b=>b.onclick=()=>{
+    const priv=b.dataset.legal==='privacy';
+    const M=document.createElement('div');M.className='modal';M.setAttribute('role','dialog');M.setAttribute('aria-modal','true');
+    M.innerHTML=`<div class="box"><button class="xx" aria-label="Close"><i data-lucide="x"></i></button><div class="in2"><h3>${priv?'Privacy Policy':'Terms and Conditions'}</h3><p>${H('[REPLACE WITH THE COMPANY\'S APPROVED '+(priv?'PRIVACY POLICY':'TERMS AND CONDITIONS')+'. Have it reviewed by a legal adviser before publishing.]')}</p></div></div>`;
+    $('#layer').appendChild(M);icons();const close=()=>{M.remove();document.removeEventListener('keydown',k);b.focus()};const k=e=>e.key==='Escape'&&close();document.addEventListener('keydown',k);M.onclick=e=>{if(e.target===M)close()};$('.xx',M).onclick=close;$('.xx',M).focus();
+  });
+  const up=$('#up');addEventListener('scroll',()=>{up.hidden=scrollY<700},{passive:true});up.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- scroll reveal (content stays visible; only a small shift animates) ---------- */
+let rvIO;
+function observe(){
+  rvIO=rvIO||new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rvIO.unobserve(e.target)}}),{threshold:.08});
+  $$('.rv:not(.in)').forEach(el=>rvIO.observe(el));
+}
+
+
+/* ---------- projects and registrations ---------- */
+function projects(){
+  const box=$('#pbox');
+  const tbl=(head,rows)=>`<div style="overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)"><table class="tbl"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  const draw=k=>{
+    if(k==='ongoing'){
+      box.innerHTML=tbl(['Client','Work description','Site location'],SITE.ongoing.map(([c,w,l])=>`<tr><td data-l="Client"><b>${esc(c)}</b></td><td data-l="Work">${esc(w)}</td><td data-l="Site">${esc(l)}</td></tr>`).join(''));
+    }else{
+      box.innerHTML=SITE.completed.map(([c,l,w])=>`<div style="margin-bottom:18px">${tbl(['Client','Work description','Period','Site location'],w.map(([d,y],i)=>`<tr>${i===0?`<td rowspan="${w.length}" data-l="Client"><b>${esc(c)}</b></td>`:''}<td data-l="Work">${esc(d)}</td><td data-l="Period" class="yr">${esc(y)}</td>${i===0?`<td rowspan="${w.length}" data-l="Site">${esc(l)}</td>`:''}</tr>`).join(''))}</div>`).join('');
+    }
+  };
+  $$('#ptabs .tab').forEach(b=>b.onclick=()=>{$$('#ptabs .tab').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw(b.dataset.p)});
+  draw('ongoing');
+}
+function regs(){
+  $('#regs').innerHTML=SITE.registrations.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd style="font-family:var(--f-mono);font-size:.92rem;overflow-wrap:anywhere">${esc(v)}</dd></div>`).join('');
+}
+
+bind();buildNav();theme();hero();about();simple();projects();regs();gallery();clients();highlights();form();safetyPop();footer();icons();observe();
+window.SITE=SITE; window.projects=projects;
+</script>
+
+
+<script type="module">
+/* SGBA Admin: Firebase Authentication + Cloud Firestore.
+   Add your Firebase web-app config below and publish the Firestore rules supplied with this file. */
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+
+const ADMIN_EMAIL = 'superglobal4@gmail.com';
+const firebaseConfig = {
+  apiKey: 'AIzaSyA82PSXdKwyIq8D-oFmuCA33hgJrMexcOc',
+  authDomain: 'sgba-47f3b.firebaseapp.com',
+  projectId: 'sgba-47f3b',
+  storageBucket: 'sgba-47f3b.firebasestorage.app',
+  messagingSenderId: '25711343480',
+  appId: '1:25711343480:web:692a3d3b8cb7f9809dba8d',
+  measurementId: 'G-DYS45NTJMH'
+};
+const configured = !Object.values(firebaseConfig).some(v => String(v).startsWith('PASTE_'));
+let auth=null, db=null, records=[];
+const $ = (s,root=document)=>root.querySelector(s);
+const esc = v => String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const initialRecords = () => {
+  const out=[];
+  (window.SITE?.ongoing||[]).forEach(([client,work,location])=>out.push({id:crypto.randomUUID(),client,work,location,period:'',status:'ongoing'}));
+  (window.SITE?.completed||[]).forEach(([client,location,works])=>(works||[]).forEach(([work,period])=>out.push({id:crypto.randomUUID(),client,work,location,period,status:'completed'})));
+  return out;
+};
+function applyRecords(){
+  const ongoing=records.filter(x=>x.status==='ongoing').map(x=>[x.client,x.work,x.location]);
+  const groups=new Map();
+  records.filter(x=>x.status==='completed').forEach(x=>{const key=x.client+'|'+x.location;if(!groups.has(key))groups.set(key,[x.client,x.location,[]]);groups.get(key)[2].push([x.work,x.period||'']);});
+  window.SITE.ongoing=ongoing;window.SITE.completed=[...groups.values()];window.projects();
+}
+function renderPublic(){
+  if(!configured)return;
+  getDoc(doc(db,'siteContent','projects')).then(snap=>{
+    if(snap.exists() && Array.isArray(snap.data().records)){records=snap.data().records;applyRecords();}
+  }).catch(err=>console.warn('Could not load live project data:',err));
+}
+function ensureModal(){
+  let m=$('#sgbaAdmin');if(m)return m;
+  m=document.createElement('div');m.id='sgbaAdmin';m.className='admin-modal';m.hidden=true;
+  m.innerHTML=`<section class="admin-panel" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+    <div class="admin-head"><div><div class="chain">Restricted access</div><h2 id="adminTitle">SGBA Admin Dashboard</h2><p>Sign in with the authorised company email to manage projects.</p></div><button class="admin-close" id="adminClose" type="button">Close</button></div>
+    <div id="adminLogin"><div class="admin-grid"><div class="admin-field full"><label for="adminEmail">Admin email</label><input id="adminEmail" type="email" value="superglobal4@gmail.com" autocomplete="username"></div><div class="admin-field full"><label for="adminPassword">Password</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Firebase account password"></div></div><div class="admin-actions"><button class="btn btn-y" id="adminSignIn" type="button">Sign in</button></div><p class="admin-msg" id="adminLoginMsg">Only superglobal4@gmail.com is authorised.</p></div>
+    <div id="adminManager" hidden><div class="admin-msg" id="adminStatus">Signed in.</div>
+      <h3 id="projectFormTitle">Add a project</h3><form id="projectForm"><input id="projectId" type="hidden"><div class="admin-grid">
+      <div class="admin-field"><label for="projectClient">Client / organisation *</label><input id="projectClient" required></div>
+      <div class="admin-field"><label for="projectStatus">Status *</label><select id="projectStatus"><option value="ongoing">Ongoing</option><option value="completed">Completed</option></select></div>
+      <div class="admin-field full"><label for="projectWork">Work description *</label><input id="projectWork" required></div>
+      <div class="admin-field"><label for="projectLocation">Site location *</label><input id="projectLocation" required></div>
+      <div class="admin-field"><label for="projectPeriod">Period (e.g. 2025–26)</label><input id="projectPeriod"></div></div>
+      <div class="admin-actions"><button class="btn btn-y" type="submit">Save project</button><button class="admin-close" id="projectReset" type="button">Clear form</button><button class="admin-close" id="adminSignOut" type="button">Sign out</button></div></form>
+      <h3 style="margin-top:26px">All projects</h3><div class="admin-list" id="adminProjectList"></div>
+    </div></section>`;
+  document.body.appendChild(m);
+  $('#adminClose',m).onclick=()=>m.hidden=true;
+  m.addEventListener('click',e=>{if(e.target===m)m.hidden=true;});
+  $('#adminSignIn',m).onclick=login;
+  $('#adminSignOut',m).onclick=async()=>{if(auth)await signOut(auth);showSignedOut();};
+  $('#projectReset',m).onclick=resetForm;
+  $('#projectForm',m).onsubmit=saveProject;
+  return m;
+}
+function showSignedOut(){const m=ensureModal();$('#adminLogin',m).hidden=false;$('#adminManager',m).hidden=true;$('#adminPassword',m).value='';}
+function showSignedIn(){const m=ensureModal();$('#adminLogin',m).hidden=true;$('#adminManager',m).hidden=false;renderAdminList();}
+function resetForm(){const f=$('#projectForm');f.reset();$('#projectId').value='';$('#projectFormTitle').textContent='Add a project';}
+function renderAdminList(){
+  const list=$('#adminProjectList');
+  if(!records.length){list.innerHTML='<p>No projects found.</p>';return;}
+  list.innerHTML=records.map(x=>`<div class="admin-item"><div><b>${esc(x.client)}</b><p>${esc(x.work)} · ${esc(x.location)} · ${esc(x.status==='ongoing'?'Ongoing':'Completed')}</p></div><div class="admin-actions"><button class="admin-close" data-edit="${esc(x.id)}">Edit</button><button class="admin-close" data-toggle="${esc(x.id)}">Mark ${x.status==='ongoing'?'completed':'ongoing'}</button><button class="admin-close" data-delete="${esc(x.id)}">Delete</button></div></div>`).join('');
+  list.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{const x=records.find(r=>r.id===b.dataset.edit);if(!x)return;$('#projectId').value=x.id;$('#projectClient').value=x.client;$('#projectWork').value=x.work;$('#projectLocation').value=x.location;$('#projectPeriod').value=x.period||'';$('#projectStatus').value=x.status;$('#projectFormTitle').textContent='Edit project';$('#projectFormTitle').scrollIntoView({behavior:'smooth',block:'center'});});
+  list.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=async()=>{const x=records.find(r=>r.id===b.dataset.toggle);if(!x)return;x.status=x.status==='ongoing'?'completed':'ongoing';await persist();});
+  list.querySelectorAll('[data-delete]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this project permanently?'))return;records=records.filter(r=>r.id!==b.dataset.delete);await persist();});
+}
+async function login(){
+  const email=$('#adminEmail').value.trim().toLowerCase(),password=$('#adminPassword').value;
+  const msg=$('#adminLoginMsg');
+  if(email!==ADMIN_EMAIL){msg.textContent='Access denied. Use the authorised company email.';return;}
+  if(!configured){msg.textContent='Firebase is not configured yet. Add your Firebase project settings in index.html first.';return;}
+  try{await signInWithEmailAndPassword(auth,email,password);msg.textContent='Signed in.';}catch(e){msg.textContent='Login failed: '+e.message;}
+}
+async function persist(){
+  try{await setDoc(doc(db,'siteContent','projects'),{records,updatedAt:new Date().toISOString(),updatedBy:ADMIN_EMAIL});applyRecords();renderAdminList();$('#adminStatus').textContent='Changes saved. The public project section is now updated.';resetForm();}
+  catch(e){$('#adminStatus').textContent='Could not save changes: '+e.message;}
+}
+async function saveProject(e){
+  e.preventDefault();const id=$('#projectId').value||crypto.randomUUID();
+  const item={id,client:$('#projectClient').value.trim(),work:$('#projectWork').value.trim(),location:$('#projectLocation').value.trim(),period:$('#projectPeriod').value.trim(),status:$('#projectStatus').value};
+  const i=records.findIndex(x=>x.id===id);if(i>=0)records[i]=item;else records.push(item);await persist();
+}
+$('#adminOpen')?.addEventListener('click',()=>{const m=ensureModal();m.hidden=false;});
+if(configured){const app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);
+  onAuthStateChanged(auth,async user=>{
+    if(user && user.email?.toLowerCase()===ADMIN_EMAIL){
+      try{const snap=await getDoc(doc(db,'siteContent','projects'));records=snap.exists()&&Array.isArray(snap.data().records)?snap.data().records:initialRecords();showSignedIn();}
+      catch(e){showSignedIn();$('#adminStatus').textContent='Could not load projects: '+e.message;}
+    }else{if(user)await signOut(auth);showSignedOut();}
+  });
+  renderPublic();
+}else{
+  // The public site still uses the built-in project list until Firebase is configured.
+  console.info('SGBA admin: add Firebase web configuration to enable live project management.');
+}
+</script>
+
+</body></html>
